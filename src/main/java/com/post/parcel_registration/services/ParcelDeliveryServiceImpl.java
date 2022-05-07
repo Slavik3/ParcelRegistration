@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
 
-    @Autowired
     private PostOfficeManagementServiceClient postOfficeManagementServiceClient;
+    private ParcelRegistrationRepository parcelRegistrationRepository;
 
     @Autowired
-    private ParcelRegistrationRepository parcelRegistrationRepository;
+    public ParcelDeliveryServiceImpl(PostOfficeManagementServiceClient postOfficeManagementServiceClient, ParcelRegistrationRepository parcelRegistrationRepository) {
+        this.postOfficeManagementServiceClient = postOfficeManagementServiceClient;
+        this.parcelRegistrationRepository = parcelRegistrationRepository;
+    }
 
 
     public void registerParcel(ParcelRegistration parcelRegistration) {

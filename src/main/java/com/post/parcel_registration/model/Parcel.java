@@ -8,7 +8,7 @@ import javax.persistence.Id;
 public class Parcel {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String name;
     private int waight;
     private long idFrom;

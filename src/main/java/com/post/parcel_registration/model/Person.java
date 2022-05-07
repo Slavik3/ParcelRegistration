@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class Person {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String name;
     private String surname;
     private int taxNumber;
