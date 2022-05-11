@@ -1,7 +1,8 @@
 package com.post.parcel_registration.services;
 
 import com.post.parcel_registration.model.Parcel;
+import org.springframework.http.ResponseEntity;
 
 public interface ParcelDeliveryService {
-    public void registerParcel(Parcel parcel);
+    public ResponseEntity<?> registerParcel(Parcel parcel);
 }
