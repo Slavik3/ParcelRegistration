@@ -1,8 +1,9 @@
 package com.post.parcel_registration.services;
 
-import com.post.parcel_registration.model.Parcel;
-import com.post.parcel_registration.model.ParcelRegistration;
-import com.post.parcel_registration.repository.ParcelRegistrationRepository;
+import com.post.parcel_registration.model.*;
+import com.post.parcel_registration.repository.ParcelRepository;
+import com.post.parcel_registration.repository.RecipientRepository;
+import com.post.parcel_registration.repository.SenderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,21 +11,25 @@ import org.springframework.stereotype.Service;
 public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
 
     private PostOfficeManagementServiceClient postOfficeManagementServiceClient;
-    private ParcelRegistrationRepository parcelRegistrationRepository;
+    private ParcelRepository parcelRepository;
+    private SenderRepository senderRepository;
+    private RecipientRepository recipientRepository;
 
     @Autowired
-    public ParcelDeliveryServiceImpl(PostOfficeManagementServiceClient postOfficeManagementServiceClient, ParcelRegistrationRepository parcelRegistrationRepository) {
+    public ParcelDeliveryServiceImpl(PostOfficeManagementServiceClient postOfficeManagementServiceClient,
+                                     ParcelRepository parcelRepository, SenderRepository senderRepository, RecipientRepository recipientRepository) {
         this.postOfficeManagementServiceClient = postOfficeManagementServiceClient;
-        this.parcelRegistrationRepository = parcelRegistrationRepository;
+        this.parcelRepository = parcelRepository;
+        this.senderRepository = senderRepository;
+        this.recipientRepository = recipientRepository;
     }
 
-
-    public void registerParcel(ParcelRegistration parcelRegistration) {
-        Parcel parcel = parcelRegistration.getParcel();
+    public void registerParcel(Parcel parcel) {
         boolean isPostOfficeAvailable = postOfficeManagementServiceClient.isPostOfficeAvailable(parcel.getIdTo());
-
-        if(isPostOfficeAvailable) {
-            parcelRegistrationRepository.save(parcelRegistration);
+        if (isPostOfficeAvailable) {
+            recipientRepository.save(parcel.getRecipient());
+            senderRepository.save(parcel.getSender());
+            parcelRepository.save(parcel);
         }
 
     }

@@ -1,8 +1,7 @@
 package com.post.parcel_registration.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Parcel {
@@ -13,6 +12,12 @@ public class Parcel {
     private int waight;
     private long idFrom;
     private long idTo;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Sender sender;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Recipient recipient;
 
     public long getId() {
         return id;
@@ -54,14 +59,32 @@ public class Parcel {
         this.idTo = idTo;
     }
 
+    public Sender getSender() {
+        return sender;
+    }
+
+    public void setSender(Sender sender) {
+        this.sender = sender;
+    }
+
+    public Recipient getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(Recipient recipient) {
+        this.recipient = recipient;
+    }
+
     public Parcel() {
     }
 
-    public Parcel(long id, String name, int waight, long idFrom, long idTo) {
+    public Parcel(Long id, String name, int waight, long idFrom, long idTo, Sender sender, Recipient recipient) {
         this.id = id;
         this.name = name;
         this.waight = waight;
         this.idFrom = idFrom;
         this.idTo = idTo;
+        this.sender = sender;
+        this.recipient = recipient;
     }
 }

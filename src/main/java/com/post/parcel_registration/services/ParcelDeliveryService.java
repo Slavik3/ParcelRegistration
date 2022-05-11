@@ -1,7 +1,7 @@
 package com.post.parcel_registration.services;
 
-import com.post.parcel_registration.model.ParcelRegistration;
+import com.post.parcel_registration.model.Parcel;
 
 public interface ParcelDeliveryService {
-    public void registerParcel(ParcelRegistration parcelRegistration);
+    public void registerParcel(Parcel parcel);
 }
