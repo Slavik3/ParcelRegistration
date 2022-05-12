@@ -17,7 +17,7 @@ public class ParcelDeliveryController {
         this.parcelDeliveryService = parcelDeliveryService;
     }
 
-    @RequestMapping(value = "/registerParcel", method = RequestMethod.POST)
+    @RequestMapping(value = "/parcel/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerParcel(@RequestBody Parcel parcel) {
         return parcelDeliveryService.registerParcel(parcel);
     }
