@@ -23,7 +23,7 @@ release.properties
 *.ipr
 
 ## Mac:
-/.DS_Store
+.DS_Store
 
 mvnw.cmd
 mvnw

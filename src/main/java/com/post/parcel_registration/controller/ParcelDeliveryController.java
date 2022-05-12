@@ -1,6 +1,7 @@
 package com.post.parcel_registration.controller;
 
-import com.post.parcel_registration.model.Parcel;
+
+import com.post.parcel_registration.dto.Parcel;
 import com.post.parcel_registration.services.ParcelDeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

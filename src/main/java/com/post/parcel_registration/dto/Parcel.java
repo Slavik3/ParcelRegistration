@@ -1,21 +1,17 @@
-package com.post.parcel_registration.model;
+package com.post.parcel_registration.dto;
 
-import javax.persistence.*;
+import com.post.parcel_registration.model.Recipient;
+import com.post.parcel_registration.model.Sender;
 
-@Entity
 public class Parcel {
-    @Id
-    @GeneratedValue
     private Long id;
     private String name;
     private int weight;
     private long idFrom;
     private long idTo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     private Sender sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     private Recipient recipient;
 
     public long getId() {

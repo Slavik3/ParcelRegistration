@@ -8,9 +8,9 @@ import org.springframework.web.client.RestTemplate;
 public class PostOfficeManagementServiceClientImpl implements PostOfficeManagementServiceClient {
 
     @Override
-    public boolean isPostOfficeAvailable(long postOfficeId) {
+    public boolean isPostOfficeAvailable(long id) {
         RestTemplate restTemplate = new RestTemplate();
-        String resourceUrl = "http://localhost:8081/isPostOfficeAvailable/" + postOfficeId;
+        String resourceUrl = "http://localhost:8081/post_office/" + id + "/availability";
         ResponseEntity<String> response = restTemplate.getForEntity(resourceUrl, String.class);
         String responseJson = response.getBody();
         return Boolean.parseBoolean(responseJson);
