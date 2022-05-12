@@ -1,8 +1,5 @@
 package com.post.parcel_registration.dto;
 
-import com.post.parcel_registration.model.Recipient;
-import com.post.parcel_registration.model.Sender;
-
 public class Parcel {
     private Long id;
     private String name;
