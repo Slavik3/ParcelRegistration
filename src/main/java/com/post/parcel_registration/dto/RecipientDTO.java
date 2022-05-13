@@ -1,6 +1,6 @@
 package com.post.parcel_registration.dto;
 
-public class Recipient extends Person {
-    public Recipient() {
+public class RecipientDTO extends PersonDTO {
+    public RecipientDTO() {
     }
 }

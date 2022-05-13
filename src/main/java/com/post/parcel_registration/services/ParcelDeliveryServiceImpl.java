@@ -1,7 +1,7 @@
 package com.post.parcel_registration.services;
 
 //import com.post.parcel_registration.dto.Parcel;
-import com.post.parcel_registration.dto.*;
+import com.post.parcel_registration.model.*;
 import com.post.parcel_registration.repository.ParcelRepository;
 import com.post.parcel_registration.repository.RecipientRepository;
 import com.post.parcel_registration.repository.SenderRepository;

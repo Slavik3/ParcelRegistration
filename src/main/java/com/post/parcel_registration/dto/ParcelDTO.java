@@ -1,15 +1,15 @@
 package com.post.parcel_registration.dto;
 
-public class Parcel {
+public class ParcelDTO {
     private Long id;
     private String name;
     private int weight;
     private long idFrom;
     private long idTo;
 
-    private Sender sender;
+    private SenderDTO sender;
 
-    private Recipient recipient;
+    private RecipientDTO recipient;
 
     public long getId() {
         return id;
@@ -51,26 +51,26 @@ public class Parcel {
         this.idTo = idTo;
     }
 
-    public Sender getSender() {
+    public SenderDTO getSender() {
         return sender;
     }
 
-    public void setSender(Sender sender) {
+    public void setSender(SenderDTO sender) {
         this.sender = sender;
     }
 
-    public Recipient getRecipient() {
+    public RecipientDTO getRecipient() {
         return recipient;
     }
 
-    public void setRecipient(Recipient recipient) {
+    public void setRecipient(RecipientDTO recipient) {
         this.recipient = recipient;
     }
 
-    public Parcel() {
+    public ParcelDTO() {
     }
 
-    public Parcel(Long id, String name, int weight, long idFrom, long idTo, Sender sender, Recipient recipient) {
+    public ParcelDTO(Long id, String name, int weight, long idFrom, long idTo, SenderDTO sender, RecipientDTO recipient) {
         this.id = id;
         this.name = name;
         this.weight = weight;
