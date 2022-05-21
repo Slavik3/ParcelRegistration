@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  db:
+    image: 'postgres:13.1-alpine'
+    ports:
+      - 5433:5432
+    container_name: parcel_registration_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=parcel_registration
+    networks:
+      - post
+
+  app:
+    image: 'parcel_registration_image'
+    ports:
+      - 8082:8082
+    build:
+      context: .
+    container_name: parcel_registration_app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/parcel_registration
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=12345
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - post
+networks:
+  post:
+    external: true
