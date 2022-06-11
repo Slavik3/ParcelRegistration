@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: parcel-registration-postgres-conf
+data:
+  host: postgres-parcel-registration-host
+  name: parcel_registration

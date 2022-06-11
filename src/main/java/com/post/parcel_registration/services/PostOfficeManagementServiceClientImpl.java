@@ -10,7 +10,7 @@ public class PostOfficeManagementServiceClientImpl implements PostOfficeManageme
     @Override
     public boolean isPostOfficeAvailable(long id) {
         RestTemplate restTemplate = new RestTemplate();
-        String resourceUrl = "http://post-office-app:8081/post-office/" + id + "/availability";
+        String resourceUrl = "http://192.168.59.100:30163/post-office/" + id + "/availability";
         ResponseEntity<String> response = restTemplate.getForEntity(resourceUrl, String.class);
         String responseJson = response.getBody();
         return Boolean.parseBoolean(responseJson);

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.post</groupId>
-	<artifactId>ParcelRegistration</artifactId>
+	<artifactId>parcel-registration</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ParcelRegistration</name>
 	<description>Parcel Registration</description>

@@ -1,0 +1,59 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: parcel-registration
+  labels:
+    name: parcel-registration
+spec:
+  ports:
+    - nodePort: 30163
+      port: 8082
+      targetPort: 8082
+      protocol: TCP
+  selector:
+    app: parcel-registration
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parcel-registration
+spec:
+  selector:
+    matchLabels:
+      app: parcel-registration
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: parcel-registration
+    spec:
+      containers:
+        - name: parcel-registration
+          image: parcel-registration:1.0
+          ports:
+            - containerPort: 8082
+          env:   # Setting Enviornmental Variables
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: parcel-registration-postgres-conf  # name of configMap
+                  key: host
+            - name: DB_NAME  # Setting Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: parcel-registration-postgres-conf
+                  key: name
+            - name: POSTGRES_USER  # Setting Database username from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials-parcel-registration # Secret Name
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials-parcel-registration
+                  key: postgres_password
+
+
