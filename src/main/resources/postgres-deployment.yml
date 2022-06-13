@@ -9,7 +9,7 @@ metadata:
     tier: database
 spec:
   ports:
-    - port: 5433
+    - port: 5432
   selector:
     app: postgres
     tier: database
@@ -74,7 +74,7 @@ spec:
                   key: name
 
           ports:
-            - containerPort: 5433
+            - containerPort: 5432
               name: postgres
           volumeMounts:
             - mountPath: /var/lib/postgresql/data

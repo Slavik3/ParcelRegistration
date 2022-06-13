@@ -1,0 +1,11 @@
+
+eval $(minikube docker-env)
+mvn clean install -DskipTests=true
+docker build -t parcel-registration:1.0 .
+cd src/main/resources
+kubectl apply -f postgres-credentials.yml
+kubectl apply -f postgres-configmap.yml
+kubectl apply -f postgres-deployment.yml
+kubectl apply -f deployment.yml
+kubectl get pods
+kubectl logs springboot-postgres-k8s-fb8667ff-4cqxw
