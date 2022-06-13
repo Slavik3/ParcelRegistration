@@ -6,7 +6,7 @@ metadata:
     name: parcel-registration
 spec:
   ports:
-    - nodePort: 30163
+    - nodePort: 30164
       port: 8082
       targetPort: 8082
       protocol: TCP
@@ -38,22 +38,22 @@ spec:
             - name: DB_HOST   # Setting Database host address from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: parcel-registration-postgres-conf  # name of configMap
+                  name: postgres-conf-pr  # name of configMap
                   key: host
             - name: DB_NAME  # Setting Database name from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: parcel-registration-postgres-conf
+                  name: postgres-conf-pr
                   key: name
             - name: POSTGRES_USER  # Setting Database username from Secret
               valueFrom:
                 secretKeyRef:
-                  name: postgres-credentials-parcel-registration # Secret Name
+                  name: postgres-credentials # Secret Name
                   key: postgres_user
             - name: POSTGRES_PASSWORD # Setting Database password from Secret
               valueFrom:
                 secretKeyRef:
-                  name: postgres-credentials-parcel-registration
+                  name: postgres-credentials
                   key: postgres_password
 
 

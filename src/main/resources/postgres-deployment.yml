@@ -3,15 +3,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres
+  name: postgres-pr-service
   labels:
-    app: postgres
+    app: postgresq # nothing changes
     tier: database
 spec:
   ports:
-    - port: 5432
+    - port: 5433
   selector:
-    app: postgres
+    app: postgres # can not connect i console
     tier: database
   clusterIP: None
 
@@ -20,9 +20,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-pv-claim # name of PVC essential for identifying the storage data
+  name: postgres-pv-claim-pr # name of PVC essential for identifying the storage data
   labels:
-    app: postgres
+    app: postgresw
     tier: database
 spec:
   accessModes:
@@ -35,15 +35,15 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: postgres-pr # name of second pod!!!
   labels:
-    app: postgres
+    app: postgresr
     tier: database
 
 spec:
   selector: # mysql Pod Should contain same labels
     matchLabels:
-      app: postgres
+      app: postgres # error if chenge
   strategy:
     type: Recreate
   template:
@@ -53,7 +53,7 @@ spec:
         tier: database
     spec:
       containers:
-        - name: postgres
+        - name: postgres2
           image: postgres
           imagePullPolicy: "IfNotPresent"
           env:
@@ -70,17 +70,17 @@ spec:
             - name: POSTGRES_DB # Setting Database Name from a 'ConfigMap'
               valueFrom:
                 configMapKeyRef:
-                  name: parcel-registration-postgres-conf
+                  name: postgres-conf-pr
                   key: name
 
           ports:
-            - containerPort: 5432
-              name: postgres
+            - containerPort: 5433
+              name: postgrest
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-persistance-storage
       volumes:
         - name: postgres-persistance-storage
           persistentVolumeClaim:
-            claimName: postgres-pv-claim
+            claimName: postgres-pv-claim-pr
 
