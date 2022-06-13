@@ -5,13 +5,13 @@ kind: Service
 metadata:
   name: postgres-pr-service
   labels:
-    app: postgresq # nothing changes
+    app: postgres
     tier: database
 spec:
   ports:
     - port: 5433
   selector:
-    app: postgres # can not connect i console
+    app: postgres
     tier: database
   clusterIP: None
 
@@ -22,7 +22,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-pv-claim-pr # name of PVC essential for identifying the storage data
   labels:
-    app: postgresw
+    app: postgres
     tier: database
 spec:
   accessModes:
@@ -35,15 +35,15 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-pr # name of second pod!!!
+  name: postgres-pr # name of pod
   labels:
-    app: postgresr
+    app: postgres
     tier: database
 
 spec:
   selector: # mysql Pod Should contain same labels
     matchLabels:
-      app: postgres # error if chenge
+      app: postgres
   strategy:
     type: Recreate
   template:
@@ -53,7 +53,7 @@ spec:
         tier: database
     spec:
       containers:
-        - name: postgres2
+        - name: postgres
           image: postgres
           imagePullPolicy: "IfNotPresent"
           env:
@@ -75,7 +75,7 @@ spec:
 
           ports:
             - containerPort: 5433
-              name: postgrest
+              name: postgres
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-persistance-storage
