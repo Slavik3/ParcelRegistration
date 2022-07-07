@@ -28,6 +28,8 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     }
 
     public ResponseEntity<?> registerParcel(Parcel parcel) {
+        ParcelRegistrationProducer.send(parcel);
+
         boolean isPostOfficeAvailable = postOfficeManagementServiceClient.isPostOfficeAvailable(parcel.getIdTo());
         if (isPostOfficeAvailable) {
             recipientRepository.save(parcel.getRecipient());
