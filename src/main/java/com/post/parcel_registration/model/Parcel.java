@@ -86,4 +86,17 @@ public class Parcel {
         this.sender = sender;
         this.recipient = recipient;
     }
+
+    @Override
+    public String toString() {
+        return "Parcel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", weight=" + weight +
+                ", idFrom=" + idFrom +
+                ", idTo=" + idTo +
+                ", sender=" + sender +
+                ", recipient=" + recipient +
+                '}';
+    }
 }
