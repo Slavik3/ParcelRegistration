@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 
 public class ParcelRegistrationProducer {
     public static void send(Parcel parcel) {
+        System.out.println("ParcelRegistrationProducer.send");
         Properties props = null;
         {
             try {

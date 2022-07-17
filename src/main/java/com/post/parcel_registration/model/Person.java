@@ -70,4 +70,16 @@ public abstract class Person {
         this.email = email;
     }
 
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", taxNumber=" + taxNumber +
+                ", passportNumber='" + passportNumber + '\'' +
+                ", phoneNumber=" + phoneNumber +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
