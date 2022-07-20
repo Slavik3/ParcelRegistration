@@ -28,9 +28,9 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     private SenderRepository senderRepository;
     private RecipientRepository recipientRepository;
     private ModelMapper modelMapper;
-    private final KafkaTemplate<String, String> producer;
+    private KafkaTemplate<String, ParcelDTO> producer;
     @Autowired
-    public ParcelDeliveryServiceImpl(ModelMapper modelMapper, RecipientRepository recipientRepository, SenderRepository senderRepository, ParcelRepository parcelRepository, KafkaTemplate<String, String> producer) {
+    public ParcelDeliveryServiceImpl(ModelMapper modelMapper, RecipientRepository recipientRepository, SenderRepository senderRepository, ParcelRepository parcelRepository, KafkaTemplate<String, ParcelDTO> producer) {
         this.modelMapper = modelMapper;
         this.recipientRepository = recipientRepository;
         this.senderRepository = senderRepository;
@@ -38,16 +38,16 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
         this.producer = producer;
     }
 
-    public ResponseEntity<?> registerParcel(Parcel parcel) {
+    public ResponseEntity<?> registerParcel(ParcelDTO parcel) {
         produce(parcel);
         return null;
     }
 
-    public void produce(Parcel parcel) {
+    public void produce(ParcelDTO parcel) {
         System.out.println("produce parcelRegistrationInitiate");
         final String key = "parcelRegistrationInitiate";
         log.info("Producing record: {}\t{}", key, parcel);
-        producer.send("parcelRegistration", key, parcel.toString()).addCallback(
+        producer.send("parcelRegistration", key, parcel).addCallback(
                 result -> {
                     final RecordMetadata m;
                     if (result != null) {
@@ -67,6 +67,7 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     @KafkaListener(topics = "parcelRegistration")
     public void consume(final ConsumerRecord<String, ParcelRegistrationCompleted> readParcelRegistrationCompletedObj) {
         if (readParcelRegistrationCompletedObj.key().equals("parcelRegistrationCompleted")) {
+            System.out.println("consume parcelRegistrationCompleted");
             Gson gson = new Gson();
             ParcelRegistrationCompleted parcelRegistrationCompleted = gson.fromJson(String.valueOf(readParcelRegistrationCompletedObj.value()), ParcelRegistrationCompleted.class);
             Boolean isPostOfficeAvailable = parcelRegistrationCompleted.getIsPostOfficeAvailable();

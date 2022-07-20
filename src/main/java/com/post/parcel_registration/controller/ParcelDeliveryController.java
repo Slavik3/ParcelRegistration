@@ -23,8 +23,8 @@ public class ParcelDeliveryController {
 
     @RequestMapping(value = "/parcel/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerParcel(@RequestBody ParcelDTO parcelDTO) {
-        Parcel parcel= modelMapper.map(parcelDTO, Parcel.class);
-        return parcelDeliveryService.registerParcel(parcel);
+        //Parcel parcel= modelMapper.map(parcelDTO, Parcel.class);
+        return parcelDeliveryService.registerParcel(parcelDTO);
     }
 
 
