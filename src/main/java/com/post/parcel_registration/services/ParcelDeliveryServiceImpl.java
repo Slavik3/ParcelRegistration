@@ -13,6 +13,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -61,7 +62,7 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     }
 
     @KafkaListener(topics = "parcelRegistration")
-    public void consume(final ConsumerRecord<String, ParcelRegistrationCompleted> readParcelRegistrationCompletedObj) {
+    public ResponseEntity<?> consume(final ConsumerRecord<String, ParcelRegistrationCompleted> readParcelRegistrationCompletedObj) {
         if (readParcelRegistrationCompletedObj.key().equals("parcelRegistrationCompleted")) {
             Gson gson = new Gson();
             ParcelRegistrationCompleted parcelRegistrationCompleted = gson.fromJson(String.valueOf(readParcelRegistrationCompletedObj.value()), ParcelRegistrationCompleted.class);
@@ -72,8 +73,8 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
                 recipientRepository.save(parcel.getRecipient());
                 senderRepository.save(parcel.getSender());
                 parcelRepository.save(parcel);
-                //return new ResponseEntity<>("parcel registered", HttpStatus.OK);
-            } //else return new ResponseEntity<>("post office not available", HttpStatus.NOT_FOUND);
+            } return new ResponseEntity<>("parcel registered", HttpStatus.OK);
         }
+        return new ResponseEntity<>("post office not available", HttpStatus.NOT_FOUND);
     }
 }
