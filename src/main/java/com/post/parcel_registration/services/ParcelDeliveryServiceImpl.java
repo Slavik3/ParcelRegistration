@@ -43,7 +43,6 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     }
 
     public void produce(ParcelDTO parcel) {
-        System.out.println("produce parcelRegistrationInitiate");
         final String key = "parcelRegistrationInitiate";
         log.info("Producing record: {}\t{}", key, parcel);
         producer.send("parcelRegistrationInit", key, parcel).addCallback(
