@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -38,16 +37,15 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
         this.producer = producer;
     }
 
-    public ResponseEntity<?> registerParcel(ParcelDTO parcel) {
+    public void registerParcel(ParcelDTO parcel) {
         produce(parcel);
-        return null;
     }
 
     public void produce(ParcelDTO parcel) {
         System.out.println("produce parcelRegistrationInitiate");
         final String key = "parcelRegistrationInitiate";
         log.info("Producing record: {}\t{}", key, parcel);
-        producer.send("parcelRegistration", key, parcel).addCallback(
+        producer.send("parcelRegistrationInit", key, parcel).addCallback(
                 result -> {
                     final RecordMetadata m;
                     if (result != null) {
@@ -60,14 +58,11 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
                 },
                 exception -> log.error("Failed to produce to kafka", exception));
         producer.flush();
-        log.info("parcel produced");
     }
 
-    @Transactional
     @KafkaListener(topics = "parcelRegistration")
     public void consume(final ConsumerRecord<String, ParcelRegistrationCompleted> readParcelRegistrationCompletedObj) {
         if (readParcelRegistrationCompletedObj.key().equals("parcelRegistrationCompleted")) {
-            System.out.println("consume parcelRegistrationCompleted");
             Gson gson = new Gson();
             ParcelRegistrationCompleted parcelRegistrationCompleted = gson.fromJson(String.valueOf(readParcelRegistrationCompletedObj.value()), ParcelRegistrationCompleted.class);
             Boolean isPostOfficeAvailable = parcelRegistrationCompleted.getIsPostOfficeAvailable();
