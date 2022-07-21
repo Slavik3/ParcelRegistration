@@ -1,8 +1,6 @@
 package com.post.parcel_registration.controller;
 
-
 import com.post.parcel_registration.dto.ParcelDTO;
-import com.post.parcel_registration.model.Parcel;
 import com.post.parcel_registration.services.ParcelDeliveryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +20,8 @@ public class ParcelDeliveryController {
     }
 
     @RequestMapping(value = "/parcel/register", method = RequestMethod.POST)
-    public void registerParcel(@RequestBody ParcelDTO parcelDTO) {
-        //Parcel parcel= modelMapper.map(parcelDTO, Parcel.class);
-        parcelDeliveryService.registerParcel(parcelDTO);
+    public ResponseEntity<?> registerParcel(@RequestBody ParcelDTO parcelDTO) {
+        return parcelDeliveryService.registerParcel(parcelDTO);
     }
 
 

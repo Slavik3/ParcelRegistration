@@ -6,5 +6,5 @@ import org.springframework.http.ResponseEntity;
 import com.post.parcel_registration.model.Parcel;
 
 public interface ParcelDeliveryService {
-    public void registerParcel(ParcelDTO parcel);
+    public ResponseEntity<?> registerParcel(ParcelDTO parcel);
 }

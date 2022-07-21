@@ -8,6 +8,7 @@ import com.post.parcel_registration.repository.ParcelRepository;
 import com.post.parcel_registration.repository.RecipientRepository;
 import com.post.parcel_registration.repository.SenderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -38,8 +39,17 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
         this.producer = producer;
     }
 
-    public void registerParcel(ParcelDTO parcel) {
+    Boolean isFinished = false;
+    Boolean isPostOfficeAvailable;
+    @SneakyThrows
+    public ResponseEntity<?> registerParcel(ParcelDTO parcel) {
         produce(parcel);
+        do{
+            Thread.sleep(1000);
+        }while (isFinished.equals(false));
+        if (isPostOfficeAvailable) {
+            return new ResponseEntity<>("parcel registered", HttpStatus.OK);
+        } else return new ResponseEntity<>("post office not available", HttpStatus.NOT_FOUND);
     }
 
     public void produce(ParcelDTO parcel) {
@@ -61,20 +71,19 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     }
 
     @KafkaListener(topics = "parcelRegistration")
-    public ResponseEntity<?> consume(final ConsumerRecord<String, ParcelRegistrationCompleted> readParcelRegistrationCompletedObj) {
+    public void consume(final ConsumerRecord<String, ParcelRegistrationCompleted> readParcelRegistrationCompletedObj) {
         if (readParcelRegistrationCompletedObj.key().equals("parcelRegistrationCompleted")) {
             Gson gson = new Gson();
             ParcelRegistrationCompleted parcelRegistrationCompleted = gson.fromJson(String.valueOf(readParcelRegistrationCompletedObj.value()), ParcelRegistrationCompleted.class);
-            Boolean isPostOfficeAvailable = parcelRegistrationCompleted.getIsPostOfficeAvailable();
+            isPostOfficeAvailable = parcelRegistrationCompleted.getIsPostOfficeAvailable();
             if (isPostOfficeAvailable) {
                 ParcelDTO parcelDTO = parcelRegistrationCompleted.getParcel();
                 Parcel parcel = modelMapper.map(parcelDTO, Parcel.class);
                 recipientRepository.save(parcel.getRecipient());
                 senderRepository.save(parcel.getSender());
                 parcelRepository.save(parcel);
-                return new ResponseEntity<>("parcel registered", HttpStatus.OK);
-            } 
+            }
         }
-        return new ResponseEntity<>("post office not available", HttpStatus.NOT_FOUND);
+        isFinished = true;
     }
 }
