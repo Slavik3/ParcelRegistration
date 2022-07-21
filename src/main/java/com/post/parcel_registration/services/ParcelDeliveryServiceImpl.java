@@ -72,7 +72,8 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
                 recipientRepository.save(parcel.getRecipient());
                 senderRepository.save(parcel.getSender());
                 parcelRepository.save(parcel);
-            } return new ResponseEntity<>("parcel registered", HttpStatus.OK);
+                return new ResponseEntity<>("parcel registered", HttpStatus.OK);
+            } 
         }
         return new ResponseEntity<>("post office not available", HttpStatus.NOT_FOUND);
     }
