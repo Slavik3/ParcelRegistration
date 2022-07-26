@@ -31,6 +31,8 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     private RecipientRepository recipientRepository;
     private ModelMapper modelMapper;
     private KafkaTemplate<String, ParcelDTO> producer;
+    private Boolean isFinished = false;
+    private Boolean isPostOfficeAvailable;
 
     @Autowired
     public ParcelDeliveryServiceImpl(ModelMapper modelMapper, RecipientRepository recipientRepository, SenderRepository senderRepository, ParcelRepository parcelRepository, KafkaTemplate<String, ParcelDTO> producer) {
@@ -40,9 +42,6 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
         this.parcelRepository = parcelRepository;
         this.producer = producer;
     }
-
-    Boolean isFinished = false;
-    Boolean isPostOfficeAvailable;
 
     @SneakyThrows
     public ResponseEntity<?> registerParcel(ParcelDTO parcel) {
