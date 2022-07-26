@@ -58,7 +58,7 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     public void produce(ParcelDTO parcel) {
         final String key = "parcelRegistrationInitiate";
         log.info("Producing record: {}\t{}", key, parcel);
-        producer.send("parcelRegistrationInit1", key, parcel).addCallback(
+        producer.send("parcelRegistrationInit2", key, parcel).addCallback(
                 result -> {
                     final RecordMetadata m;
                     if (result != null) {
@@ -73,7 +73,7 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
         producer.flush();
     }
 
-    @KafkaListener(topics = "parcelRegistration1")
+    @KafkaListener(topics = "parcelRegistration2")
     public void consume(final ConsumerRecord<String, ParcelRegistrationCompleted> readParcelRegistrationCompletedObj) {
         if (readParcelRegistrationCompletedObj.key().equals("parcelRegistrationCompleted")) {
             Gson gson = new Gson();
@@ -81,19 +81,13 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
             isPostOfficeAvailable = parcelRegistrationCompleted.getIsPostOfficeAvailable();
             if (isPostOfficeAvailable) {
                 ParcelDTO parcelDTO = parcelRegistrationCompleted.getParcel();
-                modelMapper.addMappings(new PropertyMap<ParcelDTO, Parcel>() {
-                            @Override
-                            protected void configure() {
-                                skip(destination.getId());
-                            }
-                        });
-                Parcel parcel = modelMapper.map(parcelDTO, Parcel.class);
+                Parcel parcel = parcelDTO.convertToParcelEntity();
                 recipientRepository.save(parcel.getRecipient());
                 senderRepository.save(parcel.getSender());
                 parcelRepository.save(parcel);
-                isFinished = true;
+
             }
         }
-
+        isFinished = true;
     }
 }
