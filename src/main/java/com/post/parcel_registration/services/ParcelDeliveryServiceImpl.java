@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     private RecipientRepository recipientRepository;
     private ModelMapper modelMapper;
     private KafkaTemplate<String, ParcelDTO> producer;
+
     @Autowired
     public ParcelDeliveryServiceImpl(ModelMapper modelMapper, RecipientRepository recipientRepository, SenderRepository senderRepository, ParcelRepository parcelRepository, KafkaTemplate<String, ParcelDTO> producer) {
         this.modelMapper = modelMapper;
@@ -41,12 +43,13 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
 
     Boolean isFinished = false;
     Boolean isPostOfficeAvailable;
+
     @SneakyThrows
     public ResponseEntity<?> registerParcel(ParcelDTO parcel) {
         produce(parcel);
-        do{
-            Thread.sleep(1000);
-        }while (isFinished.equals(false));
+        do {
+            Thread.sleep(100);
+        } while (isFinished.equals(false));
         if (isPostOfficeAvailable) {
             return new ResponseEntity<>("parcel registered", HttpStatus.OK);
         } else return new ResponseEntity<>("post office not available", HttpStatus.NOT_FOUND);
@@ -55,7 +58,7 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     public void produce(ParcelDTO parcel) {
         final String key = "parcelRegistrationInitiate";
         log.info("Producing record: {}\t{}", key, parcel);
-        producer.send("parcelRegistrationInit", key, parcel).addCallback(
+        producer.send("parcelRegistrationInit1", key, parcel).addCallback(
                 result -> {
                     final RecordMetadata m;
                     if (result != null) {
@@ -70,7 +73,7 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
         producer.flush();
     }
 
-    @KafkaListener(topics = "parcelRegistration")
+    @KafkaListener(topics = "parcelRegistration1")
     public void consume(final ConsumerRecord<String, ParcelRegistrationCompleted> readParcelRegistrationCompletedObj) {
         if (readParcelRegistrationCompletedObj.key().equals("parcelRegistrationCompleted")) {
             Gson gson = new Gson();
@@ -78,12 +81,19 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
             isPostOfficeAvailable = parcelRegistrationCompleted.getIsPostOfficeAvailable();
             if (isPostOfficeAvailable) {
                 ParcelDTO parcelDTO = parcelRegistrationCompleted.getParcel();
+                modelMapper.addMappings(new PropertyMap<ParcelDTO, Parcel>() {
+                            @Override
+                            protected void configure() {
+                                skip(destination.getId());
+                            }
+                        });
                 Parcel parcel = modelMapper.map(parcelDTO, Parcel.class);
                 recipientRepository.save(parcel.getRecipient());
                 senderRepository.save(parcel.getSender());
                 parcelRepository.save(parcel);
+                isFinished = true;
             }
         }
-        isFinished = true;
+
     }
 }

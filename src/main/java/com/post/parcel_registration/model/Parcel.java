@@ -5,8 +5,8 @@ import javax.persistence.*;
 @Entity
 public class Parcel {
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String name;
     private int weight;
     private long idFrom;
