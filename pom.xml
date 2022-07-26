@@ -9,12 +9,13 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.post</groupId>
-	<artifactId>ParcelRegistration</artifactId>
+	<artifactId>parcel-registration</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ParcelRegistration</name>
 	<description>Parcel Registration</description>
 	<properties>
 		<java.version>8</java.version>
+		<io.confluent.schema-registry.version>7.1.1</io.confluent.schema-registry.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,6 +50,18 @@
 			<artifactId>modelmapper</artifactId>
 			<version>2.4.5</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
+			<version>${kafka.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.confluent</groupId>
+			<artifactId>kafka-json-serializer</artifactId>
+			<version>${io.confluent.schema-registry.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
